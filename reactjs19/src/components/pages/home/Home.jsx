@@ -4,12 +4,46 @@ import profile from "./../../../assets/profile.png";
 
 const Home = () => {
   const [businessList, setBusinessList] = useState([]);
+  const [city, setCity] = useState("Hyderabad");
+
+  useEffect(() => {
+    const detectCity = async () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            try {
+              const response = await axios.get(
+                `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyBeeIWUhRhc2ZW9oKxUugzu8y9JQgFVcvA`
+              );
+              const addressComponents =
+                response.data.results[0]?.address_components || [];
+              const cityComponent = addressComponents.find((component) =>
+                component.types.includes("locality")
+              );
+              const detectedCity = cityComponent?.long_name;
+              setCity(detectedCity || "Hyderabad");
+            } catch (error) {
+              console.error("Error detecting city:", error);
+            }
+          },
+          (error) => {
+            console.error("Geolocation error:", error);
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+      }
+    };
+
+    detectCity();
+  }, []);
 
   useEffect(() => {
     const fetchBusinessList = async () => {
       try {
         const response = await axios.get(
-          "https://topiko.com/prod/app/gethpbusinesslistbycity.php?city=Hyderabad"
+          `https://topiko.com/prod/app/gethpbusinesslistbycity.php?city=${city}`
         );
         setBusinessList(response.data || []);
       } catch (error) {
@@ -17,10 +51,13 @@ const Home = () => {
       }
     };
 
-    fetchBusinessList();
-  }, []);
+    if (city) {
+      fetchBusinessList();
+    }
+  }, [city]);
 
   console.log("Business List:", businessList);
+  console.log("Current City:", city);
 
   return (
     <>
