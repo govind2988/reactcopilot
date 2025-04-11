@@ -88,6 +88,50 @@ const HeaderHome = () => {
           <SwiperSlide>Slide 6</SwiperSlide>
         </Swiper>
       </div>
+
+      <div className="swipperCOntainer2">
+        <Swiper
+          modules={[Navigation]}
+          navigation
+          spaceBetween={20}
+          breakpoints={{
+            0: {
+              slidesPerView: 1,
+            },
+            640: {
+              slidesPerView: 2,
+            },
+            1024: {
+              slidesPerView: 3,
+            },
+            1280: {
+              slidesPerView: 4,
+            },
+          }}
+        >
+          <SwiperSlide>
+            <img className="profile-img" src={profile} alt="..." />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img className="profile-img" src={profile} alt="..." />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img className="profile-img" src={profile} alt="..." />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img className="profile-img" src={profile} alt="..." />
+          </SwiperSlide>{" "}
+          <SwiperSlide>
+            <img className="profile-img" src={profile} alt="..." />
+          </SwiperSlide>{" "}
+          <SwiperSlide>
+            <img className="profile-img" src={profile} alt="..." />
+          </SwiperSlide>{" "}
+          <SwiperSlide>
+            <img className="profile-img" src={profile} alt="..." />
+          </SwiperSlide>
+        </Swiper>
+      </div>
     </>
   );
 };
