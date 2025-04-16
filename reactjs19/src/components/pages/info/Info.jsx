@@ -9,6 +9,12 @@ import Button from "react-bootstrap/Button";
 const Info = () => {
   return (
     <>
+      <title>Info Page</title>
+      <meta name="description" content="Info Page" />
+      <meta
+        name="keywords"
+        content="Info, React, JavaScript, semantic markup, html"
+      />
       {/* banner */}
       <div className="jumbotron jumbotron-fluid bannerBg" id="banner">
         <div className="container text-center text-md-left">

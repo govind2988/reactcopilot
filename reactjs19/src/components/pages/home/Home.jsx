@@ -63,6 +63,12 @@ const Home = () => {
 
   return (
     <>
+      <title>Home Page</title>
+      <meta name="description" content="Info Page" />
+      <meta
+        name="keywords"
+        content="Info, React, JavaScript, semantic markup, html"
+      />
       <Banner />
       <section className="bg-light py-5 homepage">
         <div className="container px-5">
