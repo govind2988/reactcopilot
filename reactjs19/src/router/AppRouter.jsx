@@ -5,6 +5,7 @@ import Info from "../components/pages/info/Info";
 import Portal from "../components/pages/portal/Portal";
 import HomeLayout from "../components/common/home/HomeLayout";
 import InfoLayout from "../components/common/home/InfoLayout";
+import ListPage from "../components/pages/home/ListPage";
 
 const AppRouter = () => {
   return (
@@ -12,7 +13,8 @@ const AppRouter = () => {
       <Routes>
         <Route element={<HomeLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/Categories" element={<Info />} />
+          <Route path="/categories" element={<Info />} />
+          <Route path="/listpage" element={<ListPage />} />
           <Route path="/portal" element={<Portal />} />
         </Route>
 

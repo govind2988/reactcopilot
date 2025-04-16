@@ -117,84 +117,92 @@ const Home = () => {
       {loading ? (
         <Loader /> // Show loader while loading
       ) : (
-        <ul className="d-flex justify-content-center w-50 mx-auto list-unstyled mb-0">
-          {businessList.map((business, index) => (
-            <li key={index} className="w-50 p-2">
-              <div className="Goodup-grid-wrap">
-                <div className="Goodup-grid-upper">
-                  <div className="Goodup-grid-thumb">
-                    <a
-                      href="shop-details.html"
-                      className="d-block text-center m-auto"
-                      tabIndex="0"
-                    >
-                      <img
-                        src={business.logo || profile}
-                        className="img-fluid"
-                        alt={business.name || "Business"}
-                      />
-                    </a>
-                  </div>
-                </div>
-                <div className="Goodup-grid-fl-wrap">
-                  <div className="Goodup-caption px-3 py-2">
-                    <h4 className="mb-0 ft-medium medium">
+        <>
+          <ul className="bList">
+            {businessList.map((business, index) => (
+              <li key={index} className="w-50 p-2">
+                <div className="Goodup-grid-wrap">
+                  <div className="Goodup-grid-upper">
+                    <div className="Goodup-grid-thumb">
                       <a
                         href="shop-details.html"
-                        className="text-dark fs-md"
+                        className="d-block text-center m-auto"
                         tabIndex="0"
                       >
-                        {business.business_name || "Business Name"}
+                        <img
+                          src={business.logo || profile}
+                          className="img-fluid"
+                          alt={business.name || "Business"}
+                        />
                       </a>
-                    </h4>
-                    <div className="Goodup-location">
-                      <i className="fas fa-map-marker-alt me-1 theme-cl"></i>
-                      {business.business_address || "Business Address"}
                     </div>
                   </div>
-                  <div className="Goodup-grid-footer py-2 px-3">
-                    <div className="Goodup-ft-first">
-                      <div className="Goodup-rating">
-                        <div className="Goodup-pr-average high">
-                          {business.rating || "N/A"}
-                        </div>
-                        <div className="Goodup-aldeio">
-                          <div className="Goodup-rates">
-                            {[...Array(5)].map((_, i) => (
-                              <i
-                                key={i}
-                                className={`fas fa-star ${
-                                  i < (business.rated_value || 0)
-                                    ? "text-warning"
-                                    : ""
-                                }`}
-                              ></i>
-                            ))}
+                  <div className="Goodup-grid-fl-wrap">
+                    <div className="Goodup-caption px-3 py-2">
+                      <h4 className="mb-0 ft-medium medium">
+                        <a
+                          href="shop-details.html"
+                          className="text-dark fs-md"
+                          tabIndex="0"
+                        >
+                          {business.business_name || "Business Name"}
+                        </a>
+                      </h4>
+                      <div className="Goodup-location">
+                        <i className="fas fa-map-marker-alt me-1 theme-cl"></i>
+                        {business.business_address || "Business Address"}
+                      </div>
+                    </div>
+                    <div className="Goodup-grid-footer py-2 px-3">
+                      <div className="Goodup-ft-first">
+                        <div className="Goodup-rating">
+                          <div className="Goodup-pr-average high">
+                            {business.rating || "N/A"}
                           </div>
-                          <div className="Goodup-all-review">
-                            <span>{business.rated_value || "0"} Reviews</span>
+                          <div className="Goodup-aldeio">
+                            <div className="Goodup-rates">
+                              {[...Array(5)].map((_, i) => (
+                                <i
+                                  key={i}
+                                  className={`fas fa-star ${
+                                    i < (business.rated_value || 0)
+                                      ? "text-warning"
+                                      : ""
+                                  }`}
+                                ></i>
+                              ))}
+                            </div>
+                            <div className="Goodup-all-review">
+                              <span>{business.rated_value || "0"} Reviews</span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="Goodup-ft-last">
-                      <div className="Goodup-inline">
-                        <div className="Goodup-bookmark-btn">
-                          <button type="button" tabIndex="0">
-                            <i className="lni lni-heart-filled position-absolute"></i>
-                          </button>
-                        </div>
-                        <div className="Goodup-bookmark-btn">
-                          {business.bookmarks || "0"}
+                      <div className="Goodup-ft-last">
+                        <div className="Goodup-inline">
+                          <div className="Goodup-bookmark-btn">
+                            <button type="button" tabIndex="0">
+                              <i className="lni lni-heart-filled position-absolute"></i>
+                            </button>
+                          </div>
+                          <div className="Goodup-bookmark-btn">
+                            {business.bookmarks || "0"}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
+
+          <p className="text-center mt-4">
+            <a href="/listpage" className="btn btn-primary">
+              Load More
+            </a>
+          </p>
+        </>
       )}
     </>
   );

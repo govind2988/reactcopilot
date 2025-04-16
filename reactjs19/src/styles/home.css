@@ -13736,4 +13736,26 @@ html {
   width: 50%;
 }
 
+ul.bList{
+  display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 0;
+}
 
+ul.bList li{
+    display: flex;
+      align-items: start;
+      justify-content: center;
+      flex: 0 0 24%;
+      padding: 10px;
+      text-align: center;
+}
+
+ul.bList li img{
+  width: 100%;
+  aspect-ratio: 1/1;
+}
