@@ -1,15 +1,14 @@
 import { Outlet } from "react-router-dom";
-import Header from "./Header";
+import InfoHeader from "./InfoHeader";
 import Footer from "./Footer";
-import "../../../styles/home.css";
 
-function HomeLayout() {
+function InfoLayout() {
   return (
     <div className="main-layout">
-      <Header />
+      <InfoHeader />
       <Outlet />
       <Footer />
     </div>
   );
 }
-export default HomeLayout;
+export default InfoLayout;

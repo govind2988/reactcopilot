@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import profile from "./../../../assets/profile.png";
+import Banner from "../../common/home/Banner";
+import Categories from "./Categories";
 
 const Home = () => {
   const [businessList, setBusinessList] = useState([]);
@@ -61,6 +63,7 @@ const Home = () => {
 
   return (
     <>
+      <Banner />
       <section className="bg-light py-5 homepage">
         <div className="container px-5">
           <div className="row gx-5 justify-content-center">
@@ -94,6 +97,8 @@ const Home = () => {
               </div>
             </div>
           </div>
+
+          <Categories />
         </div>
       </section>
 
