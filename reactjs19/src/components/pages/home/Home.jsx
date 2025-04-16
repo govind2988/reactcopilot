@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useLoader } from "../../../context/LoaderContext"; // Import useLoader
 import profile from "./../../../assets/profile.png";
 import Banner from "../../common/home/Banner";
 import Categories from "./Categories";
@@ -8,7 +9,7 @@ import Loader from "../../common/home/Loader";
 const Home = () => {
   const [businessList, setBusinessList] = useState([]);
   const [city, setCity] = useState("Hyderabad");
-  const [loading, setLoading] = useState(true); // Added loading state
+  const { loading, setLoading } = useLoader(); // Use global loader state
 
   useEffect(() => {
     const detectCity = async () => {
@@ -45,7 +46,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchBusinessList = async () => {
-      setLoading(true); // Set loading to true before API call
+      setLoading(true); // Use global loader
       try {
         const response = await axios.get(
           `https://topiko.com/prod/app/gethpbusinesslistbycity.php?city=${city}`
@@ -54,14 +55,14 @@ const Home = () => {
       } catch (error) {
         console.error("Error fetching business list:", error);
       } finally {
-        setLoading(false); // Set loading to false after API call
+        setLoading(false); // Use global loader
       }
     };
 
     if (city) {
       fetchBusinessList();
     }
-  }, [city]);
+  }, [city, setLoading]);
 
   console.log("Business List:", businessList);
   console.log("Current City:", city);
