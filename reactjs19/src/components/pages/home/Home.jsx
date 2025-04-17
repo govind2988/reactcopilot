@@ -130,7 +130,7 @@ const Home = () => {
                         tabIndex="0"
                       >
                         <img
-                          src={business.logo || profile}
+                          src={business.logo1 || profile}
                           className="img-fluid"
                           alt={business.name || "Business"}
                         />

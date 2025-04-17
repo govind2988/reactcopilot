@@ -2,6 +2,7 @@ import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Login from "./Login"; // Import the Login component
+import Location from "./Location"; // Import the Login component
 
 const NavbarHome = () => {
   const [show, setShow] = useState(false);
@@ -26,7 +27,10 @@ const NavbarHome = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <div
+            className="collapse navbar-collapse align-items-center justify-content-center"
+            id="navbarSupportedContent"
+          >
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
               <li className="nav-item">
                 <a className="nav-link" href="/">
@@ -48,12 +52,19 @@ const NavbarHome = () => {
                   Login
                 </a>
               </li>
+              <li className="nav-item">
+                <a className="nav-link" onClick={handleShow}>
+                  <Button variant="primary">
+                    <i class="fas fa-map-marker-alt"></i>Location
+                  </Button>
+                </a>
+              </li>
             </ul>
           </div>
         </div>
       </nav>
       <Login show={show} handleClose={handleClose} />{" "}
-      {/* Use the Login component */}
+      <Location show={show} handleClose={handleClose} />{" "}
     </>
   );
 };
