@@ -63,6 +63,10 @@ const NavbarHome = () => {
           </div>
         </div>
       </nav>
+      <p className="text-center">
+        {" "}
+        Current Location: <b>Chennai</b>
+      </p>
       <Login show={show} handleClose={handleClose} />{" "}
       <Location show={show} handleClose={handleClose} />{" "}
     </>
