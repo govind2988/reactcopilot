@@ -7,52 +7,24 @@ import Pagination from "react-bootstrap/Pagination"; // Import Pagination from r
 
 function ListPage() {
   const [businessList, setBusinessList] = useState([]);
-  const [city, setCity] = useState("Hyderabad");
+  const [filteredBusinessList, setFilteredBusinessList] = useState([]); // State for filtered list
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [activeCategory, setActiveCategory] = useState("all"); // State for active category
   const { loading, setLoading } = useLoader(); // Use global loader state
   const [currentPage, setCurrentPage] = useState(1); // State for current page
-  const itemsPerPage = 2; // Number of items per page
+  const itemsPerPage = 12; // Number of items per page
 
   useEffect(() => {
-    const detectCity = async () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            const { latitude, longitude } = position.coords;
-            try {
-              const response = await axios.get(
-                `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyBeeIWUhRhc2ZW9oKxUugzu8y9JQgFVcvA`
-              );
-              const addressComponents =
-                response.data.results[0]?.address_components || [];
-              const cityComponent = addressComponents.find((component) =>
-                component.types.includes("locality")
-              );
-              const detectedCity = cityComponent?.long_name;
-              setCity(detectedCity || "Hyderabad");
-            } catch (error) {
-              console.error("Error detecting city:", error);
-            }
-          },
-          (error) => {
-            console.error("Geolocation error:", error);
-          }
-        );
-      } else {
-        console.error("Geolocation is not supported by this browser.");
-      }
-    };
-
-    detectCity();
-  }, []);
-
-  useEffect(() => {
-    const fetchBusinessList = async () => {
+    const fetchBusinessList = async (category = "all") => {
       setLoading(true); // Use global loader
       try {
-        const response = await axios.get(
-          `https://topiko.com/prod/app/gethpbusinesslistbycity.php?city=${city}`
-        );
+        const url =
+          category === "all"
+            ? "https://fakestoreapi.com/products"
+            : `https://fakestoreapi.com/products/category/${category}`;
+        const response = await axios.get(url); // Fetch data based on category
         setBusinessList(response.data || []);
+        setFilteredBusinessList(response.data || []); // Initialize filtered list
       } catch (error) {
         console.error("Error fetching business list:", error);
       } finally {
@@ -60,15 +32,33 @@ function ListPage() {
       }
     };
 
-    if (city) {
-      fetchBusinessList();
-    }
-  }, [city, setLoading]);
+    fetchBusinessList(activeCategory); // Fetch data when activeCategory changes
+  }, [activeCategory, setLoading]);
+
+  // Handle search input change
+  const handleSearchChange = (event) => {
+    const term = event.target.value.toLowerCase();
+    setSearchTerm(term);
+    setFilteredBusinessList(
+      businessList.filter((business) =>
+        business.title?.toLowerCase().includes(term)
+      )
+    );
+  };
+
+  // Handle category change
+  const handleCategoryChange = (category) => {
+    setActiveCategory(category);
+    setCurrentPage(1); // Reset to the first page
+  };
 
   // Calculate paginated data
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = businessList.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredBusinessList.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   // Handle page change
   const handlePageChange = (pageNumber) => {
@@ -77,7 +67,9 @@ function ListPage() {
     }
   };
 
-  const totalPages = Math.ceil(businessList.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredBusinessList.length / itemsPerPage);
+
+  console.log("Product List:", businessList); // Debugging line
 
   return (
     <>
@@ -85,6 +77,68 @@ function ListPage() {
         <h1>List Page</h1>
         <p>Explore our Lists</p>
       </div>
+
+      <div className="text-center mb-4 search-bar">
+        <input
+          type="text"
+          placeholder="Search products..."
+          className="form-control w-50 mx-auto"
+          value={searchTerm} // Bind search term
+          onChange={handleSearchChange} // Handle search input change
+        />
+      </div>
+
+      <div className="text-center mb-4 category-tabs">
+        <ul
+          className="nav nav-tabs justify-content-center"
+          id="myTab"
+          role="tablist"
+        >
+          <li className="nav-item" role="presentation">
+            <a
+              className={`nav-link ${activeCategory === "all" ? "active" : ""}`}
+              onClick={() => handleCategoryChange("all")}
+              role="tab"
+            >
+              All Categories
+            </a>
+          </li>
+          <li className="nav-item" role="presentation">
+            <a
+              className={`nav-link ${
+                activeCategory === "jewelery" ? "active" : ""
+              }`}
+              onClick={() => handleCategoryChange("jewelery")}
+              role="tab"
+            >
+              Jewelery
+            </a>
+          </li>
+          <li className="nav-item" role="presentation">
+            <a
+              className={`nav-link ${
+                activeCategory === "men's clothing" ? "active" : ""
+              }`}
+              onClick={() => handleCategoryChange("men's clothing")}
+              role="tab"
+            >
+              Men's Clothing
+            </a>
+          </li>
+          <li className="nav-item" role="presentation">
+            <a
+              className={`nav-link ${
+                activeCategory === "women's clothing" ? "active" : ""
+              }`}
+              onClick={() => handleCategoryChange("women's clothing")}
+              role="tab"
+            >
+              Women's Clothing
+            </a>
+          </li>
+        </ul>
+      </div>
+
       {loading ? (
         <Loader /> // Show loader while loading
       ) : (
@@ -101,9 +155,9 @@ function ListPage() {
                         tabIndex="0"
                       >
                         <img
-                          src={business.logo || profile}
+                          src={business.image || profile} // Use correct image field
                           className="img-fluid"
-                          alt={business.name || "Business"}
+                          alt={business.title || "Product"} // Use correct title field
                         />
                       </a>
                     </div>
@@ -116,19 +170,22 @@ function ListPage() {
                           className="text-dark fs-md"
                           tabIndex="0"
                         >
-                          {business.business_name || "Business Name"}
+                          {business.title || "Product Name"} // Use correct
+                          title field
                         </a>
                       </h4>
                       <div className="Goodup-location">
                         <i className="fas fa-map-marker-alt me-1 theme-cl"></i>
-                        {business.business_address || "Business Address"}
+                        {business.category || "Category"} // Use correct
+                        category field
                       </div>
                     </div>
                     <div className="Goodup-grid-footer py-2 px-3">
                       <div className="Goodup-ft-first">
                         <div className="Goodup-rating">
                           <div className="Goodup-pr-average high">
-                            {business.rating || "N/A"}
+                            {business.rating?.rate || "N/A"} // Use correct
+                            rating field
                           </div>
                           <div className="Goodup-aldeio">
                             <div className="Goodup-rates">
@@ -136,7 +193,7 @@ function ListPage() {
                                 <i
                                   key={i}
                                   className={`fas fa-star ${
-                                    i < (business.rated_value || 0)
+                                    i < (business.rating?.rate || 0)
                                       ? "text-warning"
                                       : ""
                                   }`}
@@ -144,20 +201,11 @@ function ListPage() {
                               ))}
                             </div>
                             <div className="Goodup-all-review">
-                              <span>{business.rated_value || "0"} Reviews</span>
+                              <span>
+                                {business.rating?.count || "0"} Reviews // Use
+                                correct review count field
+                              </span>
                             </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="Goodup-ft-last">
-                        <div className="Goodup-inline">
-                          <div className="Goodup-bookmark-btn">
-                            <button type="button" tabIndex="0">
-                              <i className="lni lni-heart-filled position-absolute"></i>
-                            </button>
-                          </div>
-                          <div className="Goodup-bookmark-btn">
-                            {business.bookmarks || "0"}
                           </div>
                         </div>
                       </div>
