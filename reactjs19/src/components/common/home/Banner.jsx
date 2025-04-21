@@ -35,7 +35,7 @@ const Banner = () => {
                   </a>
                   <a
                     className="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder"
-                    href="projects.html"
+                    href="/projects"
                   >
                     Projects
                   </a>

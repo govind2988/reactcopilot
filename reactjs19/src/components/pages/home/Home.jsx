@@ -9,7 +9,7 @@ import Loader from "../../common/home/Loader";
 const Home = () => {
   const [businessList, setBusinessList] = useState([]);
   const [city, setCity] = useState("Hyderabad");
-  const { loading, setLoading } = useLoader(); // Use global loader state
+  const { loading, setLoading } = useLoader();
 
   useEffect(() => {
     const detectCity = async () => {
