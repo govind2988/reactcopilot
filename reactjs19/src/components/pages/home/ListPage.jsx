@@ -183,27 +183,30 @@ function ListPage() {
                     <div className="Goodup-grid-footer py-2 px-3">
                       <div className="Goodup-ft-first">
                         <div className="Goodup-rating">
-                          <div className="Goodup-pr-average high">
-                            {business.rating?.rate || "N/A"} // Use correct
-                            rating field
-                          </div>
-                          <div className="Goodup-aldeio">
-                            <div className="Goodup-rates">
-                              {[...Array(5)].map((_, i) => (
+                          <div className="Goodup-rates">
+                            {[...Array(5)].map((_, i) => {
+                              const rate = business.rating?.rate || 0;
+                              return (
                                 <i
                                   key={i}
-                                  className={`fas fa-star ${
-                                    i < (business.rating?.rate || 0)
-                                      ? "text-warning"
-                                      : ""
+                                  className={`text-warning ${
+                                    i < Math.floor(rate)
+                                      ? "fa-solid fa-star"
+                                      : i < rate
+                                      ? "fa-solid fa-star-half-alt"
+                                      : "fa-regular fa-star"
                                   }`}
                                 ></i>
-                              ))}
-                            </div>
+                              );
+                            })}
+                          </div>
+                          <div className="Goodup-pr-average high">
+                            {business.rating?.rate || "N/A"}
+                          </div>
+                          <div className="Goodup-aldeio">
                             <div className="Goodup-all-review">
                               <span>
-                                {business.rating?.count || "0"} Reviews // Use
-                                correct review count field
+                                {business.rating?.count || "0"} Reviews
                               </span>
                             </div>
                           </div>

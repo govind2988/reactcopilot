@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "ag-grid-react": "^33.2.4",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.5",
+    "font-awesome-icons": "^1.6.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
     "react-dom": "^19.0.0",
