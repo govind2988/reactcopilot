@@ -4,6 +4,7 @@ import { useLoader } from "../../../context/LoaderContext"; // Import useLoader
 import profile from "./../../../assets/profile.png";
 import Loader from "../../common/home/Loader";
 import Pagination from "react-bootstrap/Pagination"; // Import Pagination from react-bootstrap
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 function ListPage() {
   const [businessList, setBusinessList] = useState([]);
@@ -13,6 +14,8 @@ function ListPage() {
   const { loading, setLoading } = useLoader(); // Use global loader state
   const [currentPage, setCurrentPage] = useState(1); // State for current page
   const itemsPerPage = 12; // Number of items per page
+  const [categories, setCategories] = useState([]); // State for categories
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const fetchBusinessList = async (category = "all") => {
@@ -35,6 +38,21 @@ function ListPage() {
     fetchBusinessList(activeCategory); // Fetch data when activeCategory changes
   }, [activeCategory, setLoading]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          "https://fakestoreapi.com/products/categories"
+        );
+        setCategories(response.data || []); // Set categories dynamically
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories(); // Fetch categories on component mount
+  }, []);
+
   // Handle search input change
   const handleSearchChange = (event) => {
     const term = event.target.value.toLowerCase();
@@ -50,6 +68,11 @@ function ListPage() {
   const handleCategoryChange = (category) => {
     setActiveCategory(category);
     setCurrentPage(1); // Reset to the first page
+  };
+
+  // Handle category click to navigate to category page
+  const handleCategoryClick = (category) => {
+    navigate(`/category/${category}`);
   };
 
   // Calculate paginated data
@@ -76,6 +99,20 @@ function ListPage() {
       <div className="text-center">
         <h1>List Page</h1>
         <p>Explore our Lists</p>
+      </div>
+
+      <div className="text-center mb-4 d-flex justify-content-center">
+        {categories.map((category, index) => (
+          <div
+            key={index}
+            className="border-1 rounded-3 shadow-sm me-2 d-flex flex-column p-4 justify-content-center align-items-center"
+            onClick={() => handleCategoryClick(category)} // Navigate on click
+            style={{ cursor: "pointer" }}
+          >
+            <i className="fa-regular fa-image"></i>
+            <h4>{category}</h4>
+          </div>
+        ))}
       </div>
 
       <div className="text-center mb-4 search-bar">

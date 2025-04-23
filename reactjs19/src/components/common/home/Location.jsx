@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"; // Add missing imports
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import profile from "./../../../assets/profile.png";
+import mapImage from "./../../../assets/map.png";
 import axios from "axios"; // Import axios for API calls
 const Location = ({ show, handleClose }) => {
   const [city, setCity] = useState("Hyderabad");
@@ -99,7 +99,7 @@ const Location = ({ show, handleClose }) => {
       </Modal.Header>
       <Modal.Body>
         <div className="map-container">
-          <img src={profile} className="img-fluid w-50" alt="Location" />
+          <img src={mapImage} className="img-fluid" alt="Location" />
         </div>
         <p>
           Location Access Enable location access to help us service your request
