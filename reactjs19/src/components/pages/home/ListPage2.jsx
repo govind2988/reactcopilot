@@ -3,18 +3,20 @@ import axios from "axios"; // Import axios for API calls
 import { useLoader } from "../../../context/LoaderContext"; // Import useLoader
 import profile from "./../../../assets/profile.png";
 import Loader from "../../common/home/Loader";
+import { Pagination } from "react-bootstrap"; // Import Pagination from react-bootstrap
 
 function ListPage2() {
   const [businessList, setBusinessList] = useState([]);
   const [filters, setFilters] = useState({
     country: "India",
     state: "",
-    city: "Chennai", // Default value set to Chennai
+    city: "Hyderabad", // Default value set to Chennai
     pincode: "",
-    page: 0, // Add page to filters
   }); // State for filters
-  const [totalPages, setTotalPages] = useState(1); // State for total pages
   const { loading, setLoading } = useLoader(); // Use global loader state
+
+  const [currentPage, setCurrentPage] = useState(1); // State for current page
+  const itemsPerPage = 10; // Number of items per page
 
   const fetchBusinessList = async (filterParams) => {
     setLoading(true); // Use global loader
@@ -25,7 +27,7 @@ function ListPage2() {
       );
       console.log("BLIST", response); // Log the response data
       setBusinessList(response.data.response || []);
-      setTotalPages(response.data.totalPages || 1); // Set total pages from API response
+      // Removed setTotalPages as totalPages is calculated dynamically
     } catch (error) {
       console.error("Error fetching business list:", error);
     } finally {
@@ -52,12 +54,17 @@ function ListPage2() {
     }));
   };
 
-  const handlePageChange = (newPage) => {
-    if (newPage >= 0 && newPage < totalPages) {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        page: newPage, // Update the page in filters
-      }));
+  const totalPages = Math.ceil(businessList.length / itemsPerPage); // Calculate total pages based on businessList
+
+  // Calculate paginated data
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = businessList.slice(indexOfFirstItem, indexOfLastItem); // Use businessList for pagination
+
+  // Handle page change
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
     }
   };
 
@@ -88,6 +95,7 @@ function ListPage2() {
         <select name="city" value={filters.city} onChange={handleFilterChange}>
           <option value="">Select City</option>
           <option value="Chennai">Chennai</option>
+          <option value="hyderabad">Hyderabad</option>
           <option value="Kerala">Kerala</option>
           <option value="Ahmedabad">Ahmedabad</option>
         </select>
@@ -108,7 +116,7 @@ function ListPage2() {
       ) : (
         <>
           <ul className="bList">
-            {businessList.map((business, index) => (
+            {currentItems.map((business, index) => (
               <li key={index} className="w-50 p-2">
                 <div className="Goodup-grid-wrap">
                   <div className="Goodup-grid-upper">
@@ -157,25 +165,33 @@ function ListPage2() {
             ))}
           </ul>
 
-          <div className="pagination-controls text-center mt-4">
-            <button
-              className="btn btn-secondary me-2"
-              onClick={() => handlePageChange(filters.page - 1)}
-              disabled={filters.page === 0}
-            >
-              Previous
-            </button>
-            <span>
-              Page {filters.page + 1} of {totalPages}
-            </span>
-            <button
-              className="btn btn-secondary ms-2"
-              onClick={() => handlePageChange(filters.page + 1)}
-              disabled={filters.page + 1 === totalPages}
-            >
-              Next
-            </button>
-          </div>
+          <Pagination className="justify-content-center">
+            <Pagination.First
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+            />
+            <Pagination.Prev
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            />
+            {Array.from({ length: totalPages }, (_, i) => (
+              <Pagination.Item
+                key={i}
+                active={currentPage === i + 1}
+                onClick={() => handlePageChange(i + 1)}
+              >
+                {i + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            />
+            <Pagination.Last
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+            />
+          </Pagination>
         </>
       )}
     </>
