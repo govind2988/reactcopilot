@@ -9,6 +9,7 @@ import ListPage from "../components/pages/home/ListPage";
 import ListPage2 from "../components/pages/home/ListPage2";
 import Projects from "../components/pages/home/projects.jsx";
 import Category from "../components/pages/category/Category";
+import SearchResult from "../components/pages/home/SearchResult";
 
 const AppRouter = () => {
   return (
@@ -22,6 +23,7 @@ const AppRouter = () => {
           <Route path="/portal" element={<Portal />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/category/:categoryId" element={<Category />} />
+          <Route path="/searchresult" element={<SearchResult />} />
         </Route>
 
         <Route element={<InfoLayout />}>
