@@ -21,13 +21,24 @@ function ListPage() {
     const fetchBusinessList = async (category = "all") => {
       setLoading(true); // Use global loader
       try {
-        const url =
-          category === "all"
-            ? "https://fakestoreapi.com/products"
-            : `https://fakestoreapi.com/products/category/${category}`;
-        const response = await axios.get(url); // Fetch data based on category
-        setBusinessList(response.data || []);
-        setFilteredBusinessList(response.data || []); // Initialize filtered list
+        // Try to get from localStorage first
+        const localKey = `businessList_${category}`;
+        const cached = localStorage.getItem(localKey);
+        if (cached) {
+          const data = JSON.parse(cached);
+          setBusinessList(data);
+          setFilteredBusinessList(data);
+        } else {
+          const url =
+            category === "all"
+              ? "https://fakestoreapi.com/products"
+              : `https://fakestoreapi.com/products/category/${category}`;
+          const response = await axios.get(url); // Fetch data based on category
+          setBusinessList(response.data || []);
+          setFilteredBusinessList(response.data || []); // Initialize filtered list
+          // Store in localStorage
+          localStorage.setItem(localKey, JSON.stringify(response.data || []));
+        }
       } catch (error) {
         console.error("Error fetching business list:", error);
       } finally {
@@ -41,10 +52,21 @@ function ListPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(
-          "https://fakestoreapi.com/products/categories"
-        );
-        setCategories(response.data || []); // Set categories dynamically
+        // Try to get from localStorage first
+        const cached = localStorage.getItem("categories");
+        if (cached) {
+          setCategories(JSON.parse(cached));
+        } else {
+          const response = await axios.get(
+            "https://fakestoreapi.com/products/categories"
+          );
+          setCategories(response.data || []); // Set categories dynamically
+          // Store in localStorage
+          localStorage.setItem(
+            "categories",
+            JSON.stringify(response.data || [])
+          );
+        }
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
